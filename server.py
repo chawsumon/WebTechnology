@@ -3,6 +3,8 @@ import json
 
 page_number =10
 w = json.load(open("worldl.json"))
+lota = sorted(list(set([c['name'][0] for c in w])))
+print(lota)
 for c in w:
     c['tld'] = c['tld'][1:]
 page_size = 20
@@ -11,6 +13,8 @@ l =[]
 for i in range(ord('A'),ord('Z')+1):
     l.append(chr(i))
 
+
+
 app = Flask(__name__)
 
 
@@ -18,7 +22,7 @@ app = Flask(__name__)
 def mainPage():
     le = len(w)
     return render_template('index.html',
-                           w=w[0:page_size],page_number=0,page_size=page_size,le=le,l=l)
+                           w=w[0:page_size],page_number=0,page_size=page_size,le=le,lota=lota)
 
 @app.route('/sortCountryName')
 def sortCountryName():
@@ -72,7 +76,6 @@ def countryByNamePage(n):
 
 @app.route('/editCountryByName/<n>')
 def editCountryByNamePage(n):
-
     c = None
     for x in w:
         if x['name'] == n:
@@ -81,12 +84,12 @@ def editCountryByNamePage(n):
         'country-edit.html',
         c=c)
 
-@app.route('/startWithAlphabetic/<s>')
-def startWithAlphabetic(s):
-    cl = [c for c in w if c['name'][0] == s]
+@app.route('/startWithAlphabetic/<a>')
+def startWithAlphabetic(a):
+    cl = [c for c in w if c['name'][0] == a]
     return render_template(
-        'startAlphabeticCountryList.html',s=s,length_of_cl=len(cl),
-        cl=cl,l=l)
+        'continent.html',a=a,length_of_cl=len(cl),
+        cl=cl,l=l,lota=lota)
 
 @app.route('/updateCountryByName')
 def updateCountryByNamePage():
